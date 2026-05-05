@@ -2,6 +2,11 @@
 
 class LinearRegression():
     def fit(self,x,y): ##y is depedent variable $ x is independent variable
+        if len(x) != len(y):
+            
+            raise ValueError("x and y must have same length")
+        
+        
         add_x = 0
         add_y = 0
         for i in x:
@@ -15,24 +20,30 @@ class LinearRegression():
         deviation_y = [i - mean_y for i in y]
         
         product_deviation = [deviation_x[i]*deviation_y[i] for i in range(len(deviation_x))]
-        sum_product_deviation = 0
-        for i in product_deviation:
-            sum_product_deviation = sum_product_deviation + i
+        sum_product_deviation = sum(product_deviation)
+        
             
         square_devation_x = list(map(lambda x: x*x,deviation_x))
-        sum_square_devation_x = 0
-        for i in square_devation_x:
-            sum_square_devation_x = sum_square_devation_x + i
+        sum_square_devation_x = sum(square_devation_x)
+        if sum_square_devation_x == 0:
+            raise ValueError(" The deviation is 0, CAn't move further")
+
             
         self.slope = sum_product_deviation/sum_square_devation_x
         self.intercept = mean_y - (self.slope * mean_x)
         
         
-    def predict(self, inpt):
+    def predict(self, x):
         ##Using formula Y = mx + c    where m is slope and c is intercept
         
-        return (self.slope*inpt) + self.intercept
+        if isinstance(x, (list, tuple)):
+            
+            return [self.slope * i + self.intercept for i in x]
         
+        else:
+        
+            return (self.slope*x) + self.intercept
+            
         
         
             
